@@ -86,7 +86,7 @@ module.exports = {
 - `ignorePaths` is an array of paths to ignore. Path could be a string or regexp.
 - `extensionsRegex` is a regexp for assets you always want to include. Example: `/\.(jpe?g|png|gif|svg)$/i`
 - `format` allows you to pick the manifest output file format.
-  - Currently supports `general` (default), `rails` or passing in a function.
+  - Currently supports `general` (default), `rails`, `flattened` or passing in a function.
 
 If you want to use a custom function it could look like this:
 

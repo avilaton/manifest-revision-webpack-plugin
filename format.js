@@ -35,6 +35,38 @@ Format.prototype.normalizeChunks = function () {
     return output;
 };
 
+function parseChunkValue (name, value) {
+    var ext = value.split('.').slice(-1)[0];
+    return name + '.' + ext;
+};
+
+/**
+ * Assets resulting in more than a single chunk will yield an array. This function creates
+ * one entry for each of those in the resulting manifest.
+
+ * @returns {object}
+ */
+Format.prototype.flattened = function () {
+    var output = {};
+    output.assets = this.assets;
+
+    for (var chunkName in this.data.assetsByChunkName) {
+        var chunkValue = this.data.assetsByChunkName[chunkName];
+        if (typeof chunkValue === 'string') {
+            output.assets[parseChunkValue(chunkName, chunkValue)] = chunkValue;
+        } else if (Array.isArray(chunkValue)) {
+            chunkValue = chunkValue.filter(function(item) {
+                return item.indexOf('hot-update.js') === -1;
+            });
+            chunkValue.forEach(function (val) {
+                output.assets[parseChunkValue(chunkName, val)] = val;
+            });
+        }
+    }
+    output.publicPath = this.data.publicPath;
+    return output;
+};
+
 /**
  * At the end of the day the chunks are assets so combine them into the assets.
 
